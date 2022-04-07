@@ -1,3 +1,4 @@
+const res = require('express/lib/response');
 const { User, Thoughts } = require('../models');
 
 module.exports = {
@@ -33,9 +34,9 @@ module.exports = {
       .then((userDB) =>
         !userDB
           ? res.status(404).json({ message: 'No user with that ID' })
-          : Student.deleteMany({ _id: { $in: userDB.Thoughts } })
+          : Thoughts.deleteMany({ _id: { $in: userDB.Thoughts } })
       )
-      .then(() => res.json({ message: 'user and students deleted!' }))
+      .then(() => res.json({ message: 'user deleted!' }))
       .catch((err) => res.status(500).json(err));
   },
   // Update a user
@@ -52,4 +53,34 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+  addFriendToUser(req, res) {
+    User.findOneAndUpdate(
+    {_id: req.params.userId,
+      friends: {$ne: req.params.friendId},
+    },
+      {$push: {friends: req.params.friendId}
+    },
+    {
+      new: true,
+      unique: true
+    }
+    )
+      res.json({message: 'Friend Added'});
+  },
+  deleteFriendFromUser(req, res) {
+    User.findOneAndUpdate(
+    {_id: req.params.userId,
+      friends: {$ne: req.params.friendId},
+    },
+      {$pull: {friends: req.params.friendId}
+    },
+    {
+      new: true,
+      unique: true
+    }
+    )
+      res.json({message: 'Friend Deleted'});
+  },
 };
+
+

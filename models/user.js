@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-// Schema to create Student model
+// Schema to create User model
 const userSchema = new Schema(
   {
    username: {
@@ -13,6 +13,7 @@ const userSchema = new Schema(
     type: String,
     unique: true,
     required: true,
+    // match: 
    },
    thoughts: [{
      type: Schema.Types.ObjectId,
@@ -31,6 +32,10 @@ const userSchema = new Schema(
     id: false,
   }
 );
+
+userSchema.virtual('friendCount').get(function(){
+  return this.friends.length;
+});
 
 const User = model("user", userSchema);
 
