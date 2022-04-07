@@ -1,4 +1,4 @@
-const res = require('express/lib/response');
+
 const { User, Thoughts } = require('../models');
 
 module.exports = {

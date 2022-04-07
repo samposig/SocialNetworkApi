@@ -1,5 +1,4 @@
-// const res = require('express/lib/response')
-// const { ObjectId } = require('mongoose').Types;
+
 const { Thoughts, User } = require('../models');
 
 module.exports = {
@@ -52,7 +51,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   addReaction(req, res) {
-    Reactions.findOneAndUpdate(
+    Thoughts.findOneAndUpdate(
     {_id: req.params.thoughtsId,
       reactions: {$ne: req.params.reactionId},
     },
