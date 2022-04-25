@@ -50,20 +50,23 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  addReaction(req, res) {
+  addReaction({ params, body }, res) {
     Thoughts.findOneAndUpdate(
-    {_id: req.params.thoughtsId,
-      reactions: {$ne: req.params.reactionId},
-    },
-      {$push: {reactions: req.params.reactionId}
-    },
-    {
-      new: true,
-      unique: true
-    }
+      { _id: params.thoughtId },
+      { $addToSet: { reactions: body } },
+      { new: true, runValidators: true }
     )
-      res.json({message: 'Reaction Added'});
+      .then((reaction) => {
+        if (!reaction) {
+          return res
+            .status(404)
+            .json({ message: "No reaction found with this id!" });
+        }
+        res.json(reaction);
+      })
+      .catch((err) => res.json(err));
   },
+
   deleteReaction(req, res) {
     Thoughts.findOneAndUpdate(
     {_id: req.params.thoughtsId,
